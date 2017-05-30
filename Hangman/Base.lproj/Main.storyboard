@@ -42,7 +42,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="216"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7zH-nv-4Tr">
-                                <rect key="frame" x="16" y="378" width="63" height="28.5"/>
+                                <rect key="frame" x="16" y="377.5" width="63" height="28.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" button="YES" playsSound="YES"/>
@@ -201,24 +201,14 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" spellCheckingType="no"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TQF-ZX-yEY">
-                                <rect key="frame" x="16" y="320" width="343" height="26"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" spellCheckingType="no"/>
-                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="TQF-ZX-yEY" firstAttribute="centerY" secondItem="ur6-go-x6A" secondAttribute="centerY" id="0mP-Aq-873"/>
                             <constraint firstItem="Gvo-Jo-8Ez" firstAttribute="top" secondItem="OLD-u4-Wdk" secondAttribute="bottom" constant="59" id="9Z5-su-3Fc"/>
-                            <constraint firstItem="TQF-ZX-yEY" firstAttribute="centerX" secondItem="OLD-u4-Wdk" secondAttribute="centerX" id="PB4-zb-wjE"/>
-                            <constraint firstItem="TQF-ZX-yEY" firstAttribute="trailing" secondItem="ur6-go-x6A" secondAttribute="trailingMargin" id="ohZ-lC-cxR"/>
-                            <constraint firstItem="TQF-ZX-yEY" firstAttribute="leading" secondItem="ur6-go-x6A" secondAttribute="leadingMargin" id="wE8-hw-DNw"/>
+                            <constraint firstItem="OLD-u4-Wdk" firstAttribute="centerX" secondItem="ur6-go-x6A" secondAttribute="centerX" id="jsM-o5-QLA"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="guessTextField" destination="TQF-ZX-yEY" id="1Hm-g6-noo"/>
                         <outlet property="testTextField" destination="OLD-u4-Wdk" id="VIj-Vs-P6d"/>
                     </connections>
                 </viewController>

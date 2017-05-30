@@ -13,16 +13,15 @@ import UIKit
 class gameBoardController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var testTextField: UITextField!
-    @IBOutlet weak var guessTextField: UITextField!
     
     var word: String!
     var characterCount: Int = 0
     var characters = ""
     var numCharacters: Int = 0
-    var x = 50
-    //let num = 1
+    var xPos = 50
     var tag = 0
     var arrChar: [String] = [""]
+    var arrTags: [Int] = []
     var aTextField = UITextField()
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,22 +37,26 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        // THIS CREATES THE TEXTFIELDS BASED OFF OF WORD AND REVEALS LETTERS AS SELECTED CORRECTLY
+        
         arrChar = word.uppercased().characters.map{String($0)}
         
         for num in (arrChar) {
             
-        tag += 1
+            tag += 1
             
-        aTextField = UITextField(frame: CGRect(x: x, y: 100, width: 20, height: 20))
-        aTextField.backgroundColor = UIColor.green
-        aTextField.textColor = UIColor.green
-        aTextField.textAlignment = .center
-        aTextField.tag = tag
-        aTextField.text = num
-            x += 50
+            aTextField = UITextField(frame: CGRect(x: xPos, y: 100, width: 20, height: 20))
+            aTextField.backgroundColor = UIColor.green
+            aTextField.textColor = UIColor.green
+            aTextField.textAlignment = .center
+            aTextField.tag = tag
+            arrTags.append(aTextField.tag)
+            aTextField.text = num
             
-            print("Letter \(String(describing: aTextField.text)) for tag: \(aTextField.tag)")
-        view.addSubview(aTextField)
+            xPos += 50
+            
+            view.addSubview(aTextField)
         }
         
         self.aTextField.delegate = self
@@ -72,46 +75,33 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         
     }
     
+    // MAY NOT USE THIS FUNCTION
     
     func countOfWord(_ wordCount: String) {
         
         numCharacters = word.characters.count
-       /*
-        guessTextField.text = String(repeating: "-", count: numCharacters)
-        guessTextField.font = UIFont.boldSystemFont(ofSize: 30)
-          
-        characters = word.uppercased()
-        print("Char from countOfWord Func: \(characters)")*/
-        /*
-        let index = (guessTextField.text?.endIndex)
-        print("index of textField: \(String(describing: index))")
- */
     }
+    
+    // THIS GETS LETTER SELECTED AND COMPARES TO LETTERS IN TEXTFIELD
     
     func something(_ selectedLetter: String) {
     
-        for char in arrChar/*word.characters.indices*/ {
-           
-            if char == selectedLetter {
-                
-                print(char)
-                
-                
-                for txt in (aTextField.text?.characters)! {
-                    
-                    if Character(char) == txt {
-                        
-                        self.aTextField.text = char
-                        self.aTextField.textColor = UIColor.blue
-                        
-                    }
-                }
-                
-            }
+        for char in arrChar {
             
+            if char == selectedLetter {
+               // NEED TO DO SOMETHING TO CHECK FOR MULTIPLE OF THE SAME CHARACTER
+                let txtLoc = (arrChar.index(of: char))! + 1
+                
+                
+                if let txtField = self.view.viewWithTag(txtLoc) as? UITextField {
+                    txtField.text = char
+                    txtField.textColor = UIColor.black
+                    
+                } else {
+                    
+                    // HERE A METHOD WILL BE CALLED TO START DRAWING THE HANGMAN PIC; WILL DO IN ANOTHER FILE
+                }
+            }
         }
- 
-        
     }
-    
 }
