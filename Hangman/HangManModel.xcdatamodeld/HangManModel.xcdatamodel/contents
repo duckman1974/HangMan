@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Player" representedClassName="Player" syncable="YES">
+        <attribute name="user" attributeType="String" indexed="YES" storedInTruthFile="YES" syncable="YES"/>
+        <relationship name="player" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Results" inverseName="results" inverseEntity="Results" storedInTruthFile="YES" syncable="YES"/>
+    </entity>
+    <entity name="Results" representedClassName="Results" syncable="YES">
+        <attribute name="loses" optional="YES" attributeType="Boolean" usesScalarValueType="YES" storedInTruthFile="YES" syncable="YES"/>
+        <attribute name="wins" optional="YES" attributeType="Boolean" usesScalarValueType="YES" storedInTruthFile="YES" syncable="YES"/>
+        <relationship name="results" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="player" inverseEntity="Player" storedInTruthFile="YES" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Player" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="Results" positionX="-54" positionY="0" width="128" height="90"/>
+    </elements>
+</model>
