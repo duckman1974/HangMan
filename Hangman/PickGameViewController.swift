@@ -181,13 +181,28 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // THIS FUNCTION CHECKS TO SEE IF THERE ARE MULTIPLE SINGLE CHARACTERS IN THE WORD AND REQEUST NEW WORD IF THERE IS
+    func noDulplicateCharacter(_chkChars: String) {
+        let newWordCount = self.newWord.characters.count
+        print("New word: \(newWordCount)")
+        let distinctWord = Set(self.newWord.characters).count
+        print("distinct word: \(distinctWord)")
+        
+        if newWordCount != distinctWord {
+            playGame()
+        }
+    }
+    
+    
     func playGame() {
         
         Networking.sharedInstance().wordRetrieve(playLevel: playLevel) { (success, gameWord, error) in
             
             if success {
-                
+        
                 self.newWord = gameWord
+                self.noDulplicateCharacter(_chkChars: self.newWord)
+                
                 print("PGVC: \(self.newWord)")
                 
             }else{

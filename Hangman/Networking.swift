@@ -7,6 +7,7 @@
 //
 
 import Foundation
+//import UIKit
 
 
 class Networking: NSObject {
@@ -34,6 +35,7 @@ class Networking: NSObject {
             }
  
             let gameWord = (NSString(data: data, encoding: String.Encoding.utf8.rawValue) as Any)
+            
             completionHandler(true, gameWord as! String, nil)
         }
         
