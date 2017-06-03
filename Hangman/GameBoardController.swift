@@ -15,6 +15,7 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var testTextField: UITextField!
     @IBOutlet weak var imageView: UIImageView!
     
+    
     var word: String!
     var characterCount: Int = 0
     var characters = ""
@@ -25,6 +26,7 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     var arrTags: [Int] = []
     var aTextField = UITextField()
     var counterForDrawing = 0
+    var counterForCorrectLetter = 0
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -32,12 +34,19 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         countOfWord(word)
         self.testTextField.delegate = self
         testTextField.becomeFirstResponder()
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.setNavigationBar()
         
         
         // THIS CREATES THE TEXTFIELDS BASED OFF OF WORD AND REVEALS LETTERS AS SELECTED CORRECTLY
@@ -78,6 +87,18 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         
     }
     
+    func setNavigationBar() {
+        
+        let screenSize: CGRect = UIScreen.main.bounds
+        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: 55))
+        let navItem = UINavigationItem(title: "")
+        let resultsItem = UIBarButtonItem(title: "Results", style: .plain, target: nil, action: #selector(results))
+        let backItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(back))
+        navItem.rightBarButtonItem = resultsItem
+        navItem.leftBarButtonItem = backItem
+        navBar.setItems([navItem], animated: false)
+        self.view.addSubview(navBar)
+    }
     
     // MAY NOT USE THIS FUNCTION
     
@@ -85,6 +106,16 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         
         numCharacters = word.characters.count
     }
+    
+    func back() {
+        _ = navigationController?.popToRootViewController(animated: false)
+    }
+    func results() {
+        let controller = storyboard?.instantiateViewController(withIdentifier: "ResultsController") as! resultsController
+        present(controller, animated: true, completion: nil)
+    }
+
+    
     
     // THIS GETS LETTER SELECTED AND COMPARES TO LETTERS IN TEXTFIELD
     
@@ -102,6 +133,16 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
                 if let txtField = self.view.viewWithTag(txtLoc) as? UITextField {
                     txtField.text = char
                     txtField.textColor = UIColor.black
+                    
+                    counterForCorrectLetter += 1
+                }
+                
+                if counterForCorrectLetter == numCharacters {
+                    
+                    DispatchQueue.main.async {
+                        print("YOU WIN!!")
+                    }
+                    
                 }
                 
             } else {

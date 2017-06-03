@@ -25,11 +25,9 @@ extension gameBoardController {
         context?.setLineCap(CGLineCap.round)
         context?.setLineWidth(4.0)
         context?.setStrokeColor(UIColor.black.cgColor)
-        //context?.setBlendMode(CGBlendMode.normal)
         context?.strokePath()
         
         imageView.image = UIGraphicsGetImageFromCurrentImageContext()
-        //imageView.alpha = opacity
         UIGraphicsEndImageContext()
     }
     
