@@ -16,8 +16,8 @@ extension Results {
         return NSFetchRequest<Results>(entityName: "Results")
     }
 
-    @NSManaged public var wins: Bool
-    @NSManaged public var loses: Bool
+    @NSManaged public var wins: Int16
+    @NSManaged public var loses: Int16
     @NSManaged public var results: Player?
 
 }

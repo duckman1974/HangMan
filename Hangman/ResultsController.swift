@@ -11,17 +11,44 @@ import UIKit
 import CoreData
 
 
-class resultsController: UITableViewController {
+class resultsController: UITableViewController, NSFetchedResultsControllerDelegate {
+    
+    //var results: Results!
+    
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super .viewWillAppear(animated)
+        
+        fetchedResultsController?.delegate = self
+        
+        let fc = fetchedResultsController
+        
+        do {
+            try fc?.performFetch()
+            print(fc?.fetchedObjects?.count as AnyObject)
+        } catch {
+            print("There was an error fetching data")
+        }
+        
+        setNavigationBar()
+    }
     
     override func viewDidLoad() {
         super .viewDidLoad()
-        self.setNavigationBar()
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
+   
+     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? = {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Results")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "wins", ascending: false)]
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: AppDelegate.stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchedResultsController
+    }()
+ 
     func setNavigationBar() {
         
         let screenSize: CGRect = UIScreen.main.bounds
@@ -36,41 +63,41 @@ class resultsController: UITableViewController {
     func back() {
         dismiss(animated: true, completion: nil)
     }
-    
-    
-    
-    // this viewcontroller will be used to display the wins and loses; the data displayed here will be 
-    // from coredata
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
-    }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        
-        return 5
+        if let fc = fetchedResultsController {
+            return fc.sections![section].numberOfObjects
+            
+        }else {
+            return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let results = fetchedResultsController!.object(at: indexPath) as! Results
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultsCell", for: indexPath)
-        
-        cell.textLabel?.text = "This is a test"
+        cell.textLabel?.text = "Game: " + "Win \(results.wins) " + "Lose \(results.loses) "
         
         return cell
     }
-    /*
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "This section"
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    
+        self.tableView.reloadData()
     }
     
-    */
+    //LOOK INTO THIS METHOD MORE
     
-    
-    
-    
-    
-    
-    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if let _ = fetchedResultsController?.managedObjectContext, let results = fetchedResultsController?.object(at: indexPath) as? Results, editingStyle == .delete {
+            
+            AppDelegate.stack.context.delete(results)
+            AppDelegate.stack.save()
+            
+        }
+
+    }
 }
+
 

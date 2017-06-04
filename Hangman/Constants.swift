@@ -17,6 +17,11 @@ struct Constants{
         static let len = "&len="
     }
     
+    struct PlayerName {
+        
+        static var playerName = ""
+    }
+    
     
     
   

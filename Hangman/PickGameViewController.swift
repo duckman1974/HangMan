@@ -28,6 +28,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var standardBtn: UIButton!
     @IBOutlet weak var hardBtn: UIButton!
     @IBOutlet weak var goButton: UIButton!
+    @IBOutlet weak var nameLabel: UILabel!
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,8 +62,9 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         
         enterNameBtn.isHidden = false
         
+        
         self.playerName.delegate = self
-        playerName.text = "Enter New User Here"
+        playerName.textColor = UIColor.black
     }
     
     
@@ -82,11 +84,16 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
             let  players = results as! [Player]
     
             for player in players {
-                print(player.user as AnyObject)
+                let name = users.endIndex
+                print(name)
+                nameLabel.text = "HEY \(player.user as AnyObject)"
                 users.append(player)
             }
+            
+            
         } catch{}
     }
+    
     
     @IBAction func startGame(_ sender: Any) {
         

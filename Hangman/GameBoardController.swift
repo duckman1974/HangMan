@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 
 class gameBoardController: UIViewController, UITextFieldDelegate {
@@ -28,6 +29,8 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     var counterForDrawing = 0
     var counterForCorrectLetter = 0
     
+    var user = pickGameViewController.sharedInstance().users
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -47,6 +50,8 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         self.setNavigationBar()
+        
+        fetchedResultsController?.delegate = self as? NSFetchedResultsControllerDelegate
         
         
         // THIS CREATES THE TEXTFIELDS BASED OFF OF WORD AND REVEALS LETTERS AS SELECTED CORRECTLY
@@ -86,6 +91,14 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
        testTextField.resignFirstResponder()
         
     }
+    
+    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? = {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Results")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "results", ascending: true)]
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: AppDelegate.stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchedResultsController
+    }()
+    
     
     func setNavigationBar() {
         
@@ -141,6 +154,7 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
                     
                     DispatchQueue.main.async {
                         print("YOU WIN!!")
+                        self.winGame()
                     }
                     
                 }
@@ -181,12 +195,38 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
                     case 7:
                         drawLine(from: CGPoint(x: 199, y: 315), to: CGPoint(x: 225, y: 270))  //RIGHT ARM
                         print("GAME OVER - YOU LOSE")
-                    
+                        loseGame()
+                        
                     default : break
                         
                     }
                 }
             }
+        }
+    }
+}
+
+extension gameBoardController {
+    
+    func loseGame() {
+        let entity = NSEntityDescription.entity(forEntityName: "Results", in: AppDelegate.stack.context)
+        let lose = Results(entity: entity!, insertInto: AppDelegate.stack.context)
+        
+        //lose.setValue(user, forKey: "results")
+        
+        lose.setValue(1, forKey: "loses")
+        DispatchQueue.main.async {
+            AppDelegate.stack.save()
+        }
+    }
+    
+    func winGame() {
+        let entity = NSEntityDescription.entity(forEntityName: "Results", in: AppDelegate.stack.context)
+        let lose = Results(entity: entity!, insertInto: AppDelegate.stack.context)
+        
+        lose.setValue(1, forKey: "wins")
+        DispatchQueue.main.async {
+            AppDelegate.stack.save()
         }
     }
 }

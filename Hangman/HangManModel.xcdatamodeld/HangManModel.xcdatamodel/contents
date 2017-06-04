@@ -5,8 +5,8 @@
         <relationship name="player" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Results" inverseName="results" inverseEntity="Results" storedInTruthFile="YES" syncable="YES"/>
     </entity>
     <entity name="Results" representedClassName="Results" syncable="YES">
-        <attribute name="loses" optional="YES" attributeType="Boolean" usesScalarValueType="YES" storedInTruthFile="YES" syncable="YES"/>
-        <attribute name="wins" optional="YES" attributeType="Boolean" usesScalarValueType="YES" storedInTruthFile="YES" syncable="YES"/>
+        <attribute name="loses" optional="YES" attributeType="Integer 16" usesScalarValueType="YES" storedInTruthFile="YES" syncable="YES"/>
+        <attribute name="wins" optional="YES" attributeType="Integer 16" usesScalarValueType="YES" storedInTruthFile="YES" syncable="YES"/>
         <relationship name="results" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="player" inverseEntity="Player" storedInTruthFile="YES" syncable="YES"/>
     </entity>
     <elements>
