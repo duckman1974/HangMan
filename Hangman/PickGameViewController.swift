@@ -19,7 +19,6 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     var playLevel = ""
     var exist: Bool = false
     var newWord: String = ""
-    //var name: String = ""
     
     @IBOutlet weak var hangManImg: UIImageView!
     @IBOutlet weak var playerName: UITextField!
@@ -35,6 +34,14 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         
+        if Reachability.isConnectedToNetwork() == true {
+            print("Internet connection OK")
+        } else {
+            DispatchQueue.main.async {
+                self.networkAlert(errorString: "Check wireless connection")
+            }
+        }
+        
         easyBtn.isSelected = false
         standardBtn.isSelected = false
         hardBtn.isSelected = false
@@ -47,7 +54,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         let fc = fetchedResultsController
         do{
             try fc?.performFetch()
-            print(fc?.fetchedObjects?.count as AnyObject)
+            //print(fc?.fetchedObjects?.count as AnyObject)
             if fc?.fetchedObjects?.count == 0 {
                 easyBtn.isEnabled = false
                 standardBtn.isEnabled = false
@@ -63,7 +70,6 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         
         subscribeToKeyboardNotifications()
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,8 +107,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
             let  players = results as! [Player]
     
             for player in players {
-                let name = users.endIndex
-                print(name)
+                //let name = users.endIndex
+                //print(name)
                 nameLabel.text = "HEY \(player.user as AnyObject)"
                 users.append(player)
             }
@@ -117,8 +123,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func easyGame(_ sender: Any) {
-        let easy = max(Int(arc4random_uniform(5) + 1), 3)
-        print(easy)
+        let easy = max(Int(arc4random_uniform(4) + 1), 3)
+        //print(easy)
         easyBtn.isSelected = true
         standardBtn.isSelected = false
         hardBtn.isSelected = false
@@ -130,8 +136,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func standardGame(_ sender: Any) {
-        let standard = max(Int(arc4random_uniform(6) + 1), 5)
-        print(standard)
+        let standard = max(Int(arc4random_uniform(5) + 1), 4)
+        //print(standard)
         standardBtn.isSelected = true
         easyBtn.isSelected = false
         hardBtn.isSelected = false
@@ -143,8 +149,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func hardGame(_ sender: Any) {
-        let hard = max(Int(arc4random_uniform(9) + 1), 7)
-        print(hard)
+        let hard = max(Int(arc4random_uniform(7) + 1), 6)
+        //print(hard)
         hardBtn.isSelected = true
         easyBtn.isSelected = false
         standardBtn.isSelected = false
@@ -212,20 +218,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "game") {
-            print("test")
+            //print("test")
             let controller = segue.destination as! gameBoardController
-           
-            //MAY DO SOMETHING WITH THIS
-            /*
-            for player in users {
-                //let name = users.endIndex
-                print("In the prepare for segue \(String(describing: player.user))")
-                name = player.user!
-            }
-            //let user = users //as? Player
-            
-            
-            controller.player = name */
             controller.word = newWord
         }
     }
@@ -233,33 +227,46 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     // THIS FUNCTION CHECKS TO SEE IF THERE ARE MULTIPLE SINGLE CHARACTERS IN THE WORD AND REQEUST NEW WORD IF THERE IS
     func noDulplicateCharacter(_chkChars: String) {
         let newWordCount = self.newWord.characters.count
-        print("New word: \(newWordCount)")
+        //print("New word: \(newWordCount)")
         let distinctWord = Set(self.newWord.characters).count
-        print("distinct word: \(distinctWord)")
-        
+        //print("distinct word: \(distinctWord)")
+    
         if newWordCount != distinctWord {
             playGame()
         }
         
         self.statusWheel.stopAnimating()
+        self.goButton.isHidden = false
+        self.goButton.titleLabel?.textColor = UIColor.black
+        self.goButton.backgroundColor = UIColor.red
     }
     
     
     func playGame() {
         
-        Networking.sharedInstance().wordRetrieve(playLevel: playLevel) { (success, gameWord, error) in
+        if Reachability.isConnectedToNetwork() == true {
             
-            if success {
+            Networking.sharedInstance().wordRetrieve(playLevel: playLevel) { (success, gameWord, error) in
+            
+                if success {
         
-                self.newWord = gameWord
-                self.noDulplicateCharacter(_chkChars: self.newWord)
-                self.goButton.isHidden = false
-                self.goButton.titleLabel?.textColor = UIColor.black
-                self.goButton.backgroundColor = UIColor.red
-                print("PGVC: \(self.newWord)")
+                    self.newWord = gameWord
+                    self.noDulplicateCharacter(_chkChars: self.newWord)
+                /*
+                    self.goButton.isHidden = false
+                    self.goButton.titleLabel?.textColor = UIColor.black
+                    self.goButton.backgroundColor = UIColor.red
+ */
+                   // print("PGVC: \(self.newWord)")
                 
-            }else{
-                print("error getting word")
+                }else{
+                    print("error getting word")
+                }
+            }
+            
+        } else {
+            DispatchQueue.main.async {
+                self.networkAlert(errorString: "Check wireless conneciton")
             }
         }
     }
@@ -274,6 +281,12 @@ extension pickGameViewController: UITextViewDelegate {
         )
         self.present(alertController, animated: true, completion: nil)
         
+    }
+    
+    func networkAlert(errorString: String) {
+        let alert = UIAlertController(title: "NO NETWORK CONNECTION", message: errorString, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     class func sharedInstance() -> pickGameViewController {
@@ -308,7 +321,6 @@ extension pickGameViewController {
         }
     }
     
-    
     func keyboardWillShow(_ notification:Notification)
     {
         view.frame.origin.y = getKeyboardHeight(notification: notification as NSNotification) * (-1)
@@ -318,7 +330,6 @@ extension pickGameViewController {
     {
         view.frame.origin.y = 0
     }
-    
     
     func subscribeToKeyboardNotifications()
     {
@@ -331,9 +342,6 @@ extension pickGameViewController {
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
-    
-    
-    
 }
 
 

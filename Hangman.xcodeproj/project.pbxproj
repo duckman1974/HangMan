@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9B397DAA1ECA81FB0093835E /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B397DA91ECA81FB0093835E /* CoreDataStack.swift */; };
 		9B67DC131EE0D62600746684 /* DrawHangMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B67DC121EE0D62600746684 /* DrawHangMan.swift */; };
+		9B7CC6251EECB8590080FA16 /* NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7CC6241EECB8590080FA16 /* NetworkReachability.swift */; };
 		9B9144AD1EDA3B34004E0822 /* SelectLetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9144AC1EDA3B34004E0822 /* SelectLetter.swift */; };
 		9BA4A9921ECA6FDC0032A13B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA4A9911ECA6FDC0032A13B /* AppDelegate.swift */; };
 		9BA4A9941ECA6FDC0032A13B /* PickGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA4A9931ECA6FDC0032A13B /* PickGameViewController.swift */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		9B397DA91ECA81FB0093835E /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		9B67DC121EE0D62600746684 /* DrawHangMan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawHangMan.swift; sourceTree = "<group>"; };
+		9B7CC6241EECB8590080FA16 /* NetworkReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkReachability.swift; sourceTree = "<group>"; };
 		9B9144AC1EDA3B34004E0822 /* SelectLetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectLetter.swift; sourceTree = "<group>"; };
 		9BA4A98E1ECA6FDC0032A13B /* Hangman.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hangman.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BA4A9911ECA6FDC0032A13B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 		9BA4A9901ECA6FDC0032A13B /* Hangman */ = {
 			isa = PBXGroup;
 			children = (
+				9B7CC6241EECB8590080FA16 /* NetworkReachability.swift */,
 				9B397DA91ECA81FB0093835E /* CoreDataStack.swift */,
 				9BA4A9911ECA6FDC0032A13B /* AppDelegate.swift */,
 				9BA4A9931ECA6FDC0032A13B /* PickGameViewController.swift */,
@@ -187,6 +190,7 @@
 				9BA4A9941ECA6FDC0032A13B /* PickGameViewController.swift in Sources */,
 				9BA4A9921ECA6FDC0032A13B /* AppDelegate.swift in Sources */,
 				9BA4A9A61ECA76420032A13B /* Constants.swift in Sources */,
+				9B7CC6251EECB8590080FA16 /* NetworkReachability.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

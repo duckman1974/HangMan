@@ -23,13 +23,13 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     var characters = ""
     var numCharacters: Int = 0
     var xPos = 30
+    var yPos = 0
     var tag = 0
     var arrChar: [String] = [""]
     var arrTags: [Int] = []
     var aTextField = UITextField()
     var counterForDrawing = 0
     var counterForCorrectLetter = 0
-    //var player = ""
     
     var user = pickGameViewController.sharedInstance().users
     
@@ -55,7 +55,31 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         
         fetchedResultsController?.delegate = self as? NSFetchedResultsControllerDelegate
         
-        //let margins = view.layoutMarginsGuide
+        let screenSize = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+        
+        print("Width: \(screenWidth)")
+        print("Height: \(screenHeight)")
+        
+        if screenHeight <= 568 {
+            
+            yPos = 275
+            
+        } else {
+            
+            yPos = 400
+        }
+        
+        if word.characters.count <= 5 {
+            
+            xPos = 70
+            
+        } else {
+            
+            xPos = 30
+        }
+        
         
         // THIS CREATES THE TEXTFIELDS BASED OFF OF WORD AND REVEALS LETTERS AS SELECTED CORRECTLY
         
@@ -65,7 +89,7 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
             
             tag += 1
             
-            aTextField = UITextField(frame: CGRect(x: xPos, y: 400, width: 30, height: 30))
+            aTextField = UITextField(frame: CGRect(x: xPos, y: yPos, width: 30, height: 30))
             aTextField.backgroundColor = UIColor.black
             aTextField.textColor = UIColor.black
             aTextField.textAlignment = .center
@@ -79,51 +103,8 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         }
         
         testTextField.textColor = UIColor.gray
-        let screenSize = UIScreen.main.bounds
-        let screenWidth = screenSize.width
-        let screenHeight = screenSize.height
-        
-        print("Width: \(screenWidth)")
-        print("Height: \(screenHeight)")
-        
     }
     
-        
-        /*
-        //Stack View
-        let stackView   = UIStackView()
-        stackView.addArrangedSubview(aTextField)
-        stackView.axis  = UILayoutConstraintAxis.vertical
-        stackView.distribution  = UIStackViewDistribution.fillProportionally
-        stackView.alignment = UIStackViewAlignment.center
-        stackView.spacing   = 1.0
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.view.addSubview(stackView)
-        
-        //Constraints
-        stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        
-        self.aTextField.delegate = self
-    }*/
-   /*
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        if view2 == nil {
-            view2 = UIView()
-            imageView.addSubview(view2!)
-            
-            let width = imageView.frame.size.width
-            let height = imageView.frame.size.height
-            
-            let frame = CGRect(x: width * 0.50, y: height * 0.50, width: width * 0.5, height: height * 0.5)
-            
-            view2?.frame = frame
-        }
-    }
-    */
     override func viewDidAppear(_ animated: Bool) {
         super .viewDidAppear(animated)
         
@@ -133,7 +114,6 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         super.viewWillDisappear(animated)
       
        testTextField.resignFirstResponder()
-        
     }
     
     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? = {
@@ -164,7 +144,6 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         aTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         aTextField.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
         aTextField.heightAnchor.constraint(equalTo: aTextField.widthAnchor, multiplier: 2.0).isActive = true
-        
     }
     
     func countOfWord(_ wordCount: String) {
@@ -187,7 +166,6 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     func something(_ selectedLetter: String) {
         
         var count = 0
-        
         
         for char in arrChar {
             
