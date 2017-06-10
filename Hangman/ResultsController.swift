@@ -15,14 +15,18 @@ class resultsController: UITableViewController, NSFetchedResultsControllerDelega
     
     //var results: Results!
     
+    //var name: String = ""
+    
     
     
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(animated)
         
         fetchedResultsController?.delegate = self
+       // playerFetchedResultsController?.delegate = self
         
         let fc = fetchedResultsController
+        //let playerFC = playerFetchedResultsController
         
         do {
             try fc?.performFetch()
@@ -30,7 +34,14 @@ class resultsController: UITableViewController, NSFetchedResultsControllerDelega
         } catch {
             print("There was an error fetching data")
         }
-        
+        /*
+        do {
+            try playerFC?.performFetch()
+            print(playerFC?.fetchedObjects?.count as AnyObject)
+        } catch {
+            print("There was an error fetching data")
+        }
+        */
         setNavigationBar()
     }
     
@@ -48,6 +59,14 @@ class resultsController: UITableViewController, NSFetchedResultsControllerDelega
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: AppDelegate.stack.context, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
     }()
+    /*
+    lazy var playerFetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? = {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Player")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "user", ascending: false)]
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: AppDelegate.stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        return fetchedResultsController
+    }()
+    */
  
     func setNavigationBar() {
         
@@ -75,6 +94,7 @@ class resultsController: UITableViewController, NSFetchedResultsControllerDelega
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let results = fetchedResultsController!.object(at: indexPath) as! Results
+        //let playerResults = playerFetchedResultsController!.object(at: indexPath) as! Player
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultsCell", for: indexPath)
         cell.textLabel?.text = "Game: " + "Win \(results.wins) " + "Lose \(results.loses) "
         

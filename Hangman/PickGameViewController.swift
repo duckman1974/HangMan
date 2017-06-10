@@ -19,6 +19,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     var playLevel = ""
     var exist: Bool = false
     var newWord: String = ""
+    //var name: String = ""
     
     @IBOutlet weak var hangManImg: UIImageView!
     @IBOutlet weak var playerName: UITextField!
@@ -29,6 +30,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var hardBtn: UIButton!
     @IBOutlet weak var goButton: UIButton!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var statusWheel: UIActivityIndicatorView!
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -37,6 +39,10 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         standardBtn.isSelected = false
         hardBtn.isSelected = false
         goButton.isHidden = true
+        nameLabel.text = ""
+        enterNameBtn.isHidden = true
+        playerName.text = "Enter New Player"
+        playerName.textColor = UIColor.lightGray
         
         let fc = fetchedResultsController
         do{
@@ -54,6 +60,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         }catch{
             print("error fetching results")
         }
+        
+        subscribeToKeyboardNotifications()
     }
     
     
@@ -61,12 +69,20 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         enterNameBtn.isHidden = false
-        
-        
         self.playerName.delegate = self
         playerName.textColor = UIColor.black
+        easyBtn.backgroundColor = UIColor.red
+        standardBtn.backgroundColor = UIColor.red
+        hardBtn.backgroundColor = UIColor.red
+        easyBtn.titleLabel?.textColor = UIColor.black
+        standardBtn.titleLabel?.textColor = UIColor.black
+        hardBtn.titleLabel?.textColor = UIColor.black
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeFromKeyboardNotifications()
+    }
     
     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? = {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Player")
@@ -89,8 +105,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
                 nameLabel.text = "HEY \(player.user as AnyObject)"
                 users.append(player)
             }
-            
-            
+        
         } catch{}
     }
     
@@ -107,36 +122,46 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         standardBtn.isSelected = false
         hardBtn.isSelected = false
         goButton.isHidden = false
+        goButton.titleLabel?.textColor = UIColor.black
+        goButton.backgroundColor = UIColor.red
         playLevel = String(easy)//count num of characters
         
         playGame()
     }
 
     @IBAction func standardGame(_ sender: Any) {
-        let standard = max(Int(arc4random_uniform(8) + 1), 5)
+        let standard = max(Int(arc4random_uniform(7) + 1), 5)
         print(standard)
         standardBtn.isSelected = true
         easyBtn.isSelected = false
         hardBtn.isSelected = false
         goButton.isHidden = false
+        goButton.titleLabel?.textColor = UIColor.black
+        goButton.backgroundColor = UIColor.red
         playLevel = String(standard)//count num of characters
         
         playGame()
     }
     
     @IBAction func hardGame(_ sender: Any) {
-        let hard = max(Int(arc4random_uniform(13) + 1), 7)
+        let hard = max(Int(arc4random_uniform(9) + 1), 7)
         print(hard)
         hardBtn.isSelected = true
         easyBtn.isSelected = false
         standardBtn.isSelected = false
         goButton.isHidden = false
+        goButton.titleLabel?.textColor = UIColor.black
+        goButton.backgroundColor = UIColor.red
         playLevel = String(hard)//count num of characters
         
         playGame()
     }
     
     @IBAction func createPlayer(_ sender: Any) {
+        
+        nameLabel.text = ""
+        playerName.resignFirstResponder()
+        
         if ((playerName.text?.isEmpty)!) {
             errorAlert(errorString: "Please create a User")
             
@@ -167,6 +192,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
                 hardBtn.isEnabled = true
                 playerName.text = ""
                 enterNameBtn.isHidden = true
+                nameLabel.text = "Hey \(String(describing: newPlayer.user!))"
+                playerName.resignFirstResponder()
                 
                 DispatchQueue.main.async {
                     AppDelegate.stack.save()
@@ -177,13 +204,30 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         playerName.text = ""
+        playerName.becomeFirstResponder()
+        playerName.textColor = UIColor.black
+        enterNameBtn.isHidden = false
+        enterNameBtn.titleLabel?.textColor = UIColor.black
+        enterNameBtn.backgroundColor = UIColor.red
     }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "game") {
             print("test")
             let controller = segue.destination as! gameBoardController
+           
+            //MAY DO SOMETHING WITH THIS
+            /*
+            for player in users {
+                //let name = users.endIndex
+                print("In the prepare for segue \(String(describing: player.user))")
+                name = player.user!
+            }
+            //let user = users //as? Player
             
+            
+            controller.player = name */
             controller.word = newWord
         }
     }
@@ -205,6 +249,10 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         
         Networking.sharedInstance().wordRetrieve(playLevel: playLevel) { (success, gameWord, error) in
             
+            DispatchQueue.main.async {
+                self.statusWheel.startAnimating()
+            }
+        
             if success {
         
                 self.newWord = gameWord
@@ -212,6 +260,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
                 
                 print("PGVC: \(self.newWord)")
                 
+                self.statusWheel.stopAnimating()
+            
             }else{
                 print("error getting word")
             }
@@ -223,7 +273,9 @@ extension pickGameViewController: UITextViewDelegate {
     
     func errorAlert(errorString: String) {
         let alertController = UIAlertController(title: "ALERT", message: errorString, preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { action in
+            self.playerName.resignFirstResponder() })
+        )
         self.present(alertController, animated: true, completion: nil)
         
     }
@@ -234,6 +286,58 @@ extension pickGameViewController: UITextViewDelegate {
         }
         return Singleton.sharedInstance
     }
+}
+
+extension pickGameViewController {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        playerName.resignFirstResponder()
+        return true
+    }
+    
+    func getKeyboardHeight(notification: NSNotification) -> CGFloat
+    {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue
+        
+        if playerName.isFirstResponder
+        {
+            return keyboardSize!.cgRectValue.height
+        }
+            
+        else
+        {
+            return 0
+        }
+    }
+    
+    
+    func keyboardWillShow(_ notification:Notification)
+    {
+        view.frame.origin.y = getKeyboardHeight(notification: notification as NSNotification) * (-1)
+    }
+    
+    func keyboardWillHide(_ notification:Notification)
+    {
+        view.frame.origin.y = 0
+    }
+    
+    
+    func subscribeToKeyboardNotifications()
+    {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    func unsubscribeFromKeyboardNotifications()
+    {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    
+    
 }
 
 

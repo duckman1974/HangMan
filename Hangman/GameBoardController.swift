@@ -17,17 +17,19 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var imageView: UIImageView!
     
     
+    var view2: UIView?
     var word: String!
     var characterCount: Int = 0
     var characters = ""
     var numCharacters: Int = 0
-    var xPos = 50
+    var xPos = 30
     var tag = 0
     var arrChar: [String] = [""]
     var arrTags: [Int] = []
     var aTextField = UITextField()
     var counterForDrawing = 0
     var counterForCorrectLetter = 0
+    //var player = ""
     
     var user = pickGameViewController.sharedInstance().users
     
@@ -38,8 +40,8 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         self.testTextField.delegate = self
         testTextField.becomeFirstResponder()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        
+        imageView.backgroundColor = UIColor.black
+        view.backgroundColor = UIColor.gray
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -53,6 +55,7 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         
         fetchedResultsController?.delegate = self as? NSFetchedResultsControllerDelegate
         
+        //let margins = view.layoutMarginsGuide
         
         // THIS CREATES THE TEXTFIELDS BASED OFF OF WORD AND REVEALS LETTERS AS SELECTED CORRECTLY
         
@@ -62,24 +65,60 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
             
             tag += 1
             
-            aTextField = UITextField(frame: CGRect(x: xPos, y: 410, width: 30, height: 30))
-            aTextField.backgroundColor = UIColor.green
-            aTextField.textColor = UIColor.green
+            aTextField = UITextField(frame: CGRect(x: xPos, y: 400, width: 30, height: 30))
+            aTextField.backgroundColor = UIColor.black
+            aTextField.textColor = UIColor.black
             aTextField.textAlignment = .center
             aTextField.tag = tag
             arrTags.append(aTextField.tag)
             aTextField.text = num
             
-            xPos += 50
-            
+            xPos += 40
+        
             view.addSubview(aTextField)
         }
         
-        self.aTextField.delegate = self
-        
+        testTextField.textColor = UIColor.gray
+        //print("Player name from the PGVC: \(player)")
         
     }
     
+        
+        /*
+        //Stack View
+        let stackView   = UIStackView()
+        stackView.addArrangedSubview(aTextField)
+        stackView.axis  = UILayoutConstraintAxis.vertical
+        stackView.distribution  = UIStackViewDistribution.fillProportionally
+        stackView.alignment = UIStackViewAlignment.center
+        stackView.spacing   = 1.0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(stackView)
+        
+        //Constraints
+        stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        
+        self.aTextField.delegate = self
+    }*/
+   /*
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if view2 == nil {
+            view2 = UIView()
+            imageView.addSubview(view2!)
+            
+            let width = imageView.frame.size.width
+            let height = imageView.frame.size.height
+            
+            let frame = CGRect(x: width * 0.50, y: height * 0.50, width: width * 0.5, height: height * 0.5)
+            
+            view2?.frame = frame
+        }
+    }
+    */
     override func viewDidAppear(_ animated: Bool) {
         super .viewDidAppear(animated)
         
@@ -113,7 +152,15 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(navBar)
     }
     
-    // MAY NOT USE THIS FUNCTION
+    //WORK ON THIS LAYOUT THING
+    func textFieldLayOut() {
+        let margins = view.layoutMarginsGuide
+        
+        aTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
+        aTextField.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
+        aTextField.heightAnchor.constraint(equalTo: aTextField.widthAnchor, multiplier: 2.0).isActive = true
+        
+    }
     
     func countOfWord(_ wordCount: String) {
         
@@ -125,11 +172,11 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     }
     func results() {
         let controller = storyboard?.instantiateViewController(withIdentifier: "ResultsController") as! resultsController
+        
+        //controller.name = player
         present(controller, animated: true, completion: nil)
     }
 
-    
-    
     // THIS GETS LETTER SELECTED AND COMPARES TO LETTERS IN TEXTFIELD
     
     func something(_ selectedLetter: String) {
@@ -145,7 +192,7 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
                 
                 if let txtField = self.view.viewWithTag(txtLoc) as? UITextField {
                     txtField.text = char
-                    txtField.textColor = UIColor.black
+                    txtField.textColor = UIColor.white
                     
                     counterForCorrectLetter += 1
                 }
@@ -156,7 +203,6 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
                         print("YOU WIN!!")
                         self.winGame()
                     }
-                    
                 }
                 
             } else {
@@ -170,30 +216,30 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
                     switch counterForDrawing {
                         
                     case 1:
-                        drawLine(from: CGPoint(x: 65, y: 700), to: CGPoint(x: 85, y: 700))  //BASE
-                        drawLine(from: CGPoint(x: 65, y: 700), to: CGPoint(x: 75, y: 650))  //BASE
-                        drawLine(from: CGPoint(x: 85, y: 700), to: CGPoint(x: 75, y: 650))  //BASE
-                        drawLine(from: CGPoint(x: 75, y: 700), to: CGPoint(x: 75, y: 100))  //LEFT VERITCAL BAR
-                        drawLine(from: CGPoint(x: 75, y: 100), to: CGPoint(x: 200, y: 100))  //TOP HORIZONTAL BAR
+                        drawLine(from: CGPoint(x: 65, y: 730), to: CGPoint(x: 85, y: 730))  //BASE
+                        drawLine(from: CGPoint(x: 65, y: 730), to: CGPoint(x: 75, y: 680))  //BASE
+                        drawLine(from: CGPoint(x: 85, y: 730), to: CGPoint(x: 75, y: 680))  //BASE
+                        drawLine(from: CGPoint(x: 75, y: 730), to: CGPoint(x: 75, y: 200))  //LEFT VERITCAL BAR
+                        drawLine(from: CGPoint(x: 75, y: 200), to: CGPoint(x: 200, y: 200))  //TOP HORIZONTAL BAR
                      
                     case 2:
-                        drawLine(from: CGPoint(x: 200, y: 100), to: CGPoint(x: 200, y: 200)) //TOP VERTICAL BAR
+                        drawLine(from: CGPoint(x: 200, y: 200), to: CGPoint(x: 200, y: 300)) //TOP VERTICAL BAR
                         drawHead() // HEAD
                         
                     case 3:
-                        drawLine(from: CGPoint(x: 199, y: 270), to: CGPoint(x: 199, y: 450))  //LEFT LEG
+                        drawLine(from: CGPoint(x: 200, y: 300), to: CGPoint(x: 200, y: 480))  //BODY
                         
                     case 4:
-                        drawLine(from: CGPoint(x: 199, y: 450), to: CGPoint(x: 185, y: 510))  //RIGHT LEG
+                        drawLine(from: CGPoint(x: 200, y: 480), to: CGPoint(x: 185, y: 510))  //LEFT LEG
                         
                     case 5:
-                        drawLine(from: CGPoint(x: 199, y: 450), to: CGPoint(x: 215, y: 510))  //BODY
+                        drawLine(from: CGPoint(x: 200, y: 480), to: CGPoint(x: 215, y: 510))  //RIGHT LEG
                         
                     case 6:
-                        drawLine(from: CGPoint(x: 199, y: 315), to: CGPoint(x: 175, y: 270))  //LEFT ARM
+                        drawLine(from: CGPoint(x: 200, y: 420), to: CGPoint(x: 170, y: 380))  //LEFT ARM
                         
                     case 7:
-                        drawLine(from: CGPoint(x: 199, y: 315), to: CGPoint(x: 225, y: 270))  //RIGHT ARM
+                        drawLine(from: CGPoint(x: 200, y: 420), to: CGPoint(x: 230, y: 380))  //RIGHT ARM
                         print("GAME OVER - YOU LOSE")
                         loseGame()
                         
@@ -212,11 +258,11 @@ extension gameBoardController {
         let entity = NSEntityDescription.entity(forEntityName: "Results", in: AppDelegate.stack.context)
         let lose = Results(entity: entity!, insertInto: AppDelegate.stack.context)
         
-        //lose.setValue(user, forKey: "results")
-        
         lose.setValue(1, forKey: "loses")
+    
         DispatchQueue.main.async {
             AppDelegate.stack.save()
+            self.loseAlert(alertString: "")
         }
     }
     
@@ -225,8 +271,29 @@ extension gameBoardController {
         let lose = Results(entity: entity!, insertInto: AppDelegate.stack.context)
         
         lose.setValue(1, forKey: "wins")
+        
         DispatchQueue.main.async {
             AppDelegate.stack.save()
+            self.winAlert(alertString: "")
         }
+    }
+}
+
+extension gameBoardController {
+    
+    func loseAlert(alertString: String) {
+        let alertController = UIAlertController(title: "YOU LOSE!", message: alertString, preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { action in
+            self.navigationController?.popViewController(animated: true)})
+            )
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func winAlert(alertString: String) {
+        let alertController = UIAlertController(title: "YOU WON!", message: alertString, preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { action in
+            self.navigationController?.popViewController(animated: true)})
+        )
+        self.present(alertController, animated: true, completion: nil)
     }
 }

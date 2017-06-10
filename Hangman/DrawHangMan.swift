@@ -24,7 +24,7 @@ extension gameBoardController {
         
         context?.setLineCap(CGLineCap.round)
         context?.setLineWidth(4.0)
-        context?.setStrokeColor(UIColor.black.cgColor)
+        context?.setStrokeColor(UIColor.white.cgColor)
         context?.strokePath()
         
         imageView.image = UIGraphicsGetImageFromCurrentImageContext()
@@ -33,12 +33,12 @@ extension gameBoardController {
     
     func drawHead() {
         
-        let circle = UIBezierPath(arcCenter: CGPoint(x: 180, y: 139 ), radius: CGFloat(15), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
+        let circle = UIBezierPath(arcCenter: CGPoint(x: 200, y: 139 ), radius: CGFloat(15), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
         
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = circle.cgPath
         
-        shapeLayer.fillColor = UIColor.black.cgColor
+        shapeLayer.fillColor = UIColor.white.cgColor
         shapeLayer.strokeColor = UIColor.red.cgColor
         shapeLayer.lineWidth = 3.0
         
