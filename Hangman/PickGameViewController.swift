@@ -77,6 +77,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         easyBtn.titleLabel?.textColor = UIColor.black
         standardBtn.titleLabel?.textColor = UIColor.black
         hardBtn.titleLabel?.textColor = UIColor.black
+        statusWheel.hidesWhenStopped = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -116,29 +117,27 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func easyGame(_ sender: Any) {
-        let easy = max(Int(arc4random_uniform(6) + 1), 3)
+        let easy = max(Int(arc4random_uniform(5) + 1), 3)
         print(easy)
         easyBtn.isSelected = true
         standardBtn.isSelected = false
         hardBtn.isSelected = false
-        goButton.isHidden = false
-        goButton.titleLabel?.textColor = UIColor.black
-        goButton.backgroundColor = UIColor.red
         playLevel = String(easy)//count num of characters
+        
+        self.statusWheel.startAnimating()
         
         playGame()
     }
 
     @IBAction func standardGame(_ sender: Any) {
-        let standard = max(Int(arc4random_uniform(7) + 1), 5)
+        let standard = max(Int(arc4random_uniform(6) + 1), 5)
         print(standard)
         standardBtn.isSelected = true
         easyBtn.isSelected = false
         hardBtn.isSelected = false
-        goButton.isHidden = false
-        goButton.titleLabel?.textColor = UIColor.black
-        goButton.backgroundColor = UIColor.red
         playLevel = String(standard)//count num of characters
+        
+        self.statusWheel.startAnimating()
         
         playGame()
     }
@@ -149,10 +148,9 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         hardBtn.isSelected = true
         easyBtn.isSelected = false
         standardBtn.isSelected = false
-        goButton.isHidden = false
-        goButton.titleLabel?.textColor = UIColor.black
-        goButton.backgroundColor = UIColor.red
         playLevel = String(hard)//count num of characters
+        
+        self.statusWheel.startAnimating()
         
         playGame()
     }
@@ -242,6 +240,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         if newWordCount != distinctWord {
             playGame()
         }
+        
+        self.statusWheel.stopAnimating()
     }
     
     
@@ -249,19 +249,15 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         
         Networking.sharedInstance().wordRetrieve(playLevel: playLevel) { (success, gameWord, error) in
             
-            DispatchQueue.main.async {
-                self.statusWheel.startAnimating()
-            }
-        
             if success {
         
                 self.newWord = gameWord
                 self.noDulplicateCharacter(_chkChars: self.newWord)
-                
+                self.goButton.isHidden = false
+                self.goButton.titleLabel?.textColor = UIColor.black
+                self.goButton.backgroundColor = UIColor.red
                 print("PGVC: \(self.newWord)")
                 
-                self.statusWheel.stopAnimating()
-            
             }else{
                 print("error getting word")
             }

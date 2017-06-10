@@ -79,7 +79,12 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         }
         
         testTextField.textColor = UIColor.gray
-        //print("Player name from the PGVC: \(player)")
+        let screenSize = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+        
+        print("Width: \(screenWidth)")
+        print("Height: \(screenHeight)")
         
     }
     
