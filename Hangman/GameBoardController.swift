@@ -68,7 +68,7 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
             
         } else {
             
-            yPos = 400
+            yPos = 450
         }
         
         if word.characters.count <= 5 {

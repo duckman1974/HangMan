@@ -108,7 +108,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
             for player in players {
                 //let name = users.endIndex
-                //print(name)
+                print(player.user!)
                 nameLabel.text = "HEY \(player.user as AnyObject)"
                 users.append(player)
             }
@@ -163,8 +163,9 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func createPlayer(_ sender: Any) {
         
+        //exist = false
         nameLabel.text = ""
-        playerName.resignFirstResponder()
+        //playerName.resignFirstResponder()
         
         if ((playerName.text?.isEmpty)!) {
             errorAlert(errorString: "Please create a User")
@@ -178,7 +179,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
             let user = playerName.text
             let entity = NSEntityDescription.entity(forEntityName: "Player", in: AppDelegate.stack.context)
             let newPlayer = Player(entity: entity!, insertInto: AppDelegate.stack.context)
-            
+            /*
             for player in users {
                 if player.user == user {
                     exist = true
@@ -187,8 +188,9 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
                     }
                 }
             }
+ */
             
-            if exist == false {
+           // if exist == false {
                 newPlayer.setValue(user, forKey: "user")
                 
                 easyBtn.isEnabled = true
@@ -202,7 +204,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
                 DispatchQueue.main.async {
                     AppDelegate.stack.save()
                 }
-            }
+           // }
         }
     }
     
@@ -234,11 +236,6 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         if newWordCount != distinctWord {
             playGame()
         }
-        
-        self.statusWheel.stopAnimating()
-        self.goButton.isHidden = false
-        self.goButton.titleLabel?.textColor = UIColor.black
-        self.goButton.backgroundColor = UIColor.red
     }
     
     
@@ -252,12 +249,15 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         
                     self.newWord = gameWord
                     self.noDulplicateCharacter(_chkChars: self.newWord)
-                /*
-                    self.goButton.isHidden = false
-                    self.goButton.titleLabel?.textColor = UIColor.black
-                    self.goButton.backgroundColor = UIColor.red
- */
-                   // print("PGVC: \(self.newWord)")
+                    //print("PGVC: \(self.newWord)")
+                    
+                    DispatchQueue.main.async {
+                        self.statusWheel.isHidden = true
+                        self.statusWheel.stopAnimating()
+                        self.goButton.isHidden = false
+                        self.goButton.titleLabel?.textColor = UIColor.black
+                        self.goButton.backgroundColor = UIColor.red
+                    }
                 
                 }else{
                     print("error getting word")
@@ -267,6 +267,12 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         } else {
             DispatchQueue.main.async {
                 self.networkAlert(errorString: "Check wireless conneciton")
+                self.statusWheel.isHidden = true
+                self.statusWheel.stopAnimating()
+                self.goButton.isHidden = true
+                self.easyBtn.isSelected = false
+                self.standardBtn.isSelected = false
+                self.hardBtn.isSelected = false
             }
         }
     }
