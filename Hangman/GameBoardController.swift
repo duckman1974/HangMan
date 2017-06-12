@@ -68,7 +68,7 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
             
         } else {
             
-            yPos = 450
+            yPos = 400
         }
         
         if word.characters.count <= 5 {
@@ -137,15 +137,6 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(navBar)
     }
     
-    //WORK ON THIS LAYOUT THING
-    func textFieldLayOut() {
-        let margins = view.layoutMarginsGuide
-        
-        aTextField.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
-        aTextField.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
-        aTextField.heightAnchor.constraint(equalTo: aTextField.widthAnchor, multiplier: 2.0).isActive = true
-    }
-    
     func countOfWord(_ wordCount: String) {
         
         numCharacters = word.characters.count
@@ -154,10 +145,9 @@ class gameBoardController: UIViewController, UITextFieldDelegate {
     func back() {
         _ = navigationController?.popToRootViewController(animated: false)
     }
+    
     func results() {
         let controller = storyboard?.instantiateViewController(withIdentifier: "ResultsController") as! resultsController
-        
-        //controller.name = player
         present(controller, animated: true, completion: nil)
     }
 
@@ -243,9 +233,10 @@ extension gameBoardController {
         
         lose.setValue(1, forKey: "loses")
     
+        AppDelegate.stack.save()
+        
         DispatchQueue.main.async {
-            AppDelegate.stack.save()
-            self.loseAlert(alertString: "")
+            self.loseAlert(alertString: "WORD: \(self.word.uppercased())")
         }
     }
     
@@ -255,9 +246,10 @@ extension gameBoardController {
         
         lose.setValue(1, forKey: "wins")
         
+        AppDelegate.stack.save()
+        
         DispatchQueue.main.async {
-            AppDelegate.stack.save()
-            self.winAlert(alertString: "")
+            self.winAlert(alertString: "WORD: \(self.word.uppercased())")
         }
     }
 }

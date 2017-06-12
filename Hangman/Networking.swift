@@ -19,7 +19,6 @@ class Networking: NSObject {
     func wordRetrieve(playLevel: String, completionHandler: @escaping(_ success: Bool, _ gameWord: String, _ error: String?) -> Void) {
        
         let urlString = Constants.Words.baseURL + Constants.Words.id + Constants.Words.len + playLevel
-        //print(urlString)
         let request = NSMutableURLRequest(url: URL(string: urlString)!)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in

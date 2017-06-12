@@ -54,7 +54,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         let fc = fetchedResultsController
         do{
             try fc?.performFetch()
-            //print(fc?.fetchedObjects?.count as AnyObject)
+
             if fc?.fetchedObjects?.count == 0 {
                 easyBtn.isEnabled = false
                 standardBtn.isEnabled = false
@@ -107,8 +107,6 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
             let  players = results as! [Player]
     
             for player in players {
-                //let name = users.endIndex
-                print(player.user!)
                 nameLabel.text = "HEY \(player.user as AnyObject)"
                 users.append(player)
             }
@@ -118,13 +116,11 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func startGame(_ sender: Any) {
-        
-        
+    
     }
     
     @IBAction func easyGame(_ sender: Any) {
         let easy = max(Int(arc4random_uniform(4) + 1), 3)
-        //print(easy)
         easyBtn.isSelected = true
         standardBtn.isSelected = false
         hardBtn.isSelected = false
@@ -137,7 +133,6 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func standardGame(_ sender: Any) {
         let standard = max(Int(arc4random_uniform(5) + 1), 4)
-        //print(standard)
         standardBtn.isSelected = true
         easyBtn.isSelected = false
         hardBtn.isSelected = false
@@ -150,7 +145,6 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func hardGame(_ sender: Any) {
         let hard = max(Int(arc4random_uniform(7) + 1), 6)
-        //print(hard)
         hardBtn.isSelected = true
         easyBtn.isSelected = false
         standardBtn.isSelected = false
@@ -163,9 +157,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func createPlayer(_ sender: Any) {
         
-        //exist = false
         nameLabel.text = ""
-        //playerName.resignFirstResponder()
         
         if ((playerName.text?.isEmpty)!) {
             errorAlert(errorString: "Please create a User")
@@ -179,18 +171,7 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
             let user = playerName.text
             let entity = NSEntityDescription.entity(forEntityName: "Player", in: AppDelegate.stack.context)
             let newPlayer = Player(entity: entity!, insertInto: AppDelegate.stack.context)
-            /*
-            for player in users {
-                if player.user == user {
-                    exist = true
-                    DispatchQueue.main.async {
-                        self.errorAlert(errorString: "Player already exist")
-                    }
-                }
-            }
- */
             
-           // if exist == false {
                 newPlayer.setValue(user, forKey: "user")
                 
                 easyBtn.isEnabled = true
@@ -200,11 +181,9 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
                 enterNameBtn.isHidden = true
                 nameLabel.text = "Hey \(String(describing: newPlayer.user!))"
                 playerName.resignFirstResponder()
+            
+                AppDelegate.stack.save()
                 
-                DispatchQueue.main.async {
-                    AppDelegate.stack.save()
-                }
-           // }
         }
     }
     
@@ -220,7 +199,6 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "game") {
-            //print("test")
             let controller = segue.destination as! gameBoardController
             controller.word = newWord
         }
@@ -229,10 +207,8 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
     // THIS FUNCTION CHECKS TO SEE IF THERE ARE MULTIPLE SINGLE CHARACTERS IN THE WORD AND REQEUST NEW WORD IF THERE IS
     func noDulplicateCharacter(_chkChars: String) {
         let newWordCount = self.newWord.characters.count
-        //print("New word: \(newWordCount)")
         let distinctWord = Set(self.newWord.characters).count
-        //print("distinct word: \(distinctWord)")
-    
+        
         if newWordCount != distinctWord {
             playGame()
         }
@@ -249,7 +225,6 @@ class pickGameViewController: UIViewController, UITextFieldDelegate {
         
                     self.newWord = gameWord
                     self.noDulplicateCharacter(_chkChars: self.newWord)
-                    //print("PGVC: \(self.newWord)")
                     
                     DispatchQueue.main.async {
                         self.statusWheel.isHidden = true

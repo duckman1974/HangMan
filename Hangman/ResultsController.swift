@@ -13,35 +13,21 @@ import CoreData
 
 class resultsController: UITableViewController, NSFetchedResultsControllerDelegate {
     
-    //var results: Results!
-    
-    //var name: String = ""
-    
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(animated)
         
         fetchedResultsController?.delegate = self
-       // playerFetchedResultsController?.delegate = self
         
         let fc = fetchedResultsController
-        //let playerFC = playerFetchedResultsController
         
         do {
             try fc?.performFetch()
-            print(fc?.fetchedObjects?.count as AnyObject)
+            print(fc?.fetchedObjects?.indices as AnyObject)
+            //print(fc?.fetchedObjects?.count as AnyObject)
         } catch {
             print("There was an error fetching data")
         }
-        /*
-        do {
-            try playerFC?.performFetch()
-            print(playerFC?.fetchedObjects?.count as AnyObject)
-        } catch {
-            print("There was an error fetching data")
-        }
-        */
+
         setNavigationBar()
     }
     
@@ -59,14 +45,6 @@ class resultsController: UITableViewController, NSFetchedResultsControllerDelega
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: AppDelegate.stack.context, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
     }()
-    /*
-    lazy var playerFetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? = {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Player")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "user", ascending: false)]
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: AppDelegate.stack.context, sectionNameKeyPath: nil, cacheName: nil)
-        return fetchedResultsController
-    }()
-    */
  
     func setNavigationBar() {
         
@@ -94,8 +72,8 @@ class resultsController: UITableViewController, NSFetchedResultsControllerDelega
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let results = fetchedResultsController!.object(at: indexPath) as! Results
-        //let playerResults = playerFetchedResultsController!.object(at: indexPath) as! Player
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultsCell", for: indexPath)
+        
         cell.textLabel?.text = "Game: " + "Win \(results.wins) " + "Lose \(results.loses) "
         
         return cell
@@ -106,17 +84,13 @@ class resultsController: UITableViewController, NSFetchedResultsControllerDelega
         self.tableView.reloadData()
     }
     
-    //LOOK INTO THIS METHOD MORE
-    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if let _ = fetchedResultsController?.managedObjectContext, let results = fetchedResultsController?.object(at: indexPath) as? Results, editingStyle == .delete {
             
             AppDelegate.stack.context.delete(results)
             AppDelegate.stack.save()
-            
         }
-
     }
 }
 

@@ -9,6 +9,8 @@
 
 import SystemConfiguration
 
+//THIS IS THE NETWORK REACHABILITY CODE
+
 public class Reachability {
     class func isConnectedToNetwork() -> Bool {
         var zeroAddress = sockaddr_in()
